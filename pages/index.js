@@ -17,16 +17,16 @@ export default function Example() {
         </div>
       </div>
 
-      <AddFavorite open={open} onClose={() => setOpen(false)} />
+      {open && <AddFavorite onClose={() => setOpen(false)} />}
     </>
   );
 }
 
-function AddFavorite({ open, onClose }) {
+function AddFavorite({ onClose }) {
   let { data: users } = useSWR("/api/users");
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal onClose={onClose}>
       <div className="flex flex-col h-full pt-3">
         <div className="px-3 pb-4 shadow-sm">
           <p className="text-xs">Choose a contact to add to Favorites</p>
@@ -41,21 +41,25 @@ function AddFavorite({ open, onClose }) {
           </div>
         </div>
 
-        {users && (
-          <div className="flex-1 overflow-y-scroll">
-            <ul className="px-3 text-left">
-              {users.map((user) => (
-                <li key={user.id} className="py-2 border-b border-gray-100">
-                  {user.name}
-                </li>
-              ))}
-            </ul>
+        <div className="flex-1 overflow-y-scroll">
+          {!users ? (
+            <p>Loading...</p>
+          ) : (
+            <>
+              <ul className="px-3 text-left">
+                {users.map((user) => (
+                  <li key={user.id} className="py-2 border-b border-gray-100">
+                    {user.name}
+                  </li>
+                ))}
+              </ul>
 
-            <p className="pt-4 pb-10 font-medium text-center text-gray-400">
-              {users.length} Contacts
-            </p>
-          </div>
-        )}
+              <p className="pt-4 pb-10 font-medium text-center text-gray-400">
+                {users.length} Contacts
+              </p>
+            </>
+          )}
+        </div>
       </div>
     </Modal>
   );
