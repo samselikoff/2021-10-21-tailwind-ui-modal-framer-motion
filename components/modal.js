@@ -1,46 +1,39 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Dialog } from "@headlessui/react";
+import { motion } from "framer-motion";
 
 export default function Modal({ onClose, children }) {
   return (
-    <Transition.Root show={true} as={Fragment}>
-      <Dialog className="fixed inset-0 z-10" onClose={onClose}>
-        <div className="flex flex-col justify-center h-full px-1 pt-4 text-center sm:block sm:p-0">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <Dialog.Overlay className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" />
-          </Transition.Child>
+    <Dialog static open={true} className="fixed inset-0 z-10" onClose={onClose}>
+      <div className="flex flex-col justify-center h-full px-1 pt-4 text-center sm:block sm:p-0">
+        <Dialog.Overlay
+          as={motion.div}
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+            transition: { ease: [0.36, 0.66, 0.04, 1], duration: 0.4 },
+          }}
+          exit={{
+            opacity: 0,
+            transition: { ease: [0.36, 0.66, 0.04, 1], duration: 0.3 },
+          }}
+          className="fixed inset-0 bg-black/40"
+        />
 
-          {/* <Dialog.Overlay
-            as={motion.div}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gray-500/75"
-          /> */}
-
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            enterTo="opacity-100 translate-y-0 sm:scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          >
-            <div className="z-0 flex flex-col w-full h-full bg-white rounded-t-lg shadow-xl">
-              {children}
-            </div>
-          </Transition.Child>
-        </div>
-      </Dialog>
-    </Transition.Root>
+        <motion.div
+          initial={{ y: "100%" }}
+          animate={{
+            y: 0,
+            transition: { ease: [0.36, 0.66, 0.04, 1], duration: 0.4 },
+          }}
+          exit={{
+            y: "100%",
+            transition: { ease: [0.36, 0.66, 0.04, 1], duration: 0.3 },
+          }}
+          className="z-0 flex flex-col w-full h-full bg-white rounded-t-lg shadow-xl"
+        >
+          {children}
+        </motion.div>
+      </div>
+    </Dialog>
   );
 }

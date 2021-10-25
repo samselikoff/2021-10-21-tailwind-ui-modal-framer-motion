@@ -1,4 +1,5 @@
 import * as Icons from "@heroicons/react/outline";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import useSWR from "swr";
 import Modal from "../components/modal";
@@ -17,7 +18,9 @@ export default function Example() {
         </div>
       </div>
 
-      {open && <AddFavorite onClose={() => setOpen(false)} />}
+      <AnimatePresence>
+        {open && <AddFavorite onClose={() => setOpen(false)} />}
+      </AnimatePresence>
     </>
   );
 }
@@ -34,7 +37,10 @@ function AddFavorite({ onClose }) {
           <div className="relative mt-5 text-center">
             <span className="font-medium">Contacts</span>
             <div className="absolute inset-y-0 right-0">
-              <button className="mr-1 text-blue-500" onClick={onClose}>
+              <button
+                className="mr-1 text-blue-500 focus:outline-none"
+                onClick={onClose}
+              >
                 Cancel
               </button>
             </div>
