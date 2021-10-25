@@ -1,9 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
-export default function Modal({ onClose, children }) {
+export default function Modal({ open, onClose, children }) {
   return (
-    <Transition.Root show={true} as={Fragment}>
+    <Transition.Root show={open} as={Fragment}>
       <Dialog className="fixed inset-0 z-10" onClose={onClose}>
         <div className="flex flex-col justify-center h-full px-1 pt-4 text-center sm:block sm:p-0">
           <Transition.Child
@@ -17,14 +17,6 @@ export default function Modal({ onClose, children }) {
           >
             <Dialog.Overlay className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" />
           </Transition.Child>
-
-          {/* <Dialog.Overlay
-            as={motion.div}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gray-500/75"
-          /> */}
 
           <Transition.Child
             as={Fragment}

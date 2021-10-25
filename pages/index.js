@@ -17,16 +17,16 @@ export default function Example() {
         </div>
       </div>
 
-      {open && <AddFavorite onClose={() => setOpen(false)} />}
+      <AddFavorite open={open} onClose={() => setOpen(false)} />
     </>
   );
 }
 
-function AddFavorite({ onClose }) {
+function AddFavorite({ open, onClose }) {
   let { data: users } = useSWR("/api/users");
 
   return (
-    <Modal onClose={onClose}>
+    <Modal open={open} onClose={onClose}>
       <div className="flex flex-col h-full pt-3">
         <div className="px-3 pb-4 shadow-sm">
           <p className="text-xs">Choose a contact to add to Favorites</p>
