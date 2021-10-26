@@ -1,6 +1,7 @@
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog } from "@headlessui/react";
 import * as Icons from "@heroicons/react/outline";
-import { Fragment, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import useSWR from "swr";
 import { Spinner } from "../components/icons";
 
@@ -18,16 +19,18 @@ export default function Example() {
         </div>
       </div>
 
-      <AddFavorite open={open} onClose={() => setOpen(false)} />
+      <AnimatePresence>
+        {open && <AddFavorite onClose={() => setOpen(false)} />}
+      </AnimatePresence>
     </>
   );
 }
 
-function AddFavorite({ open, onClose }) {
+function AddFavorite({ onClose }) {
   let { data: users } = useSWR("/api/users");
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal onClose={onClose}>
       <div className="flex flex-col h-full pt-3">
         <div className="px-3 pb-4 shadow-sm">
           <p className="text-xs">Choose a contact to add to Favorites</p>
@@ -71,38 +74,39 @@ function AddFavorite({ open, onClose }) {
   );
 }
 
-function Modal({ open, onClose, children }) {
+function Modal({ onClose, children }) {
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog className="fixed inset-0 z-10" onClose={onClose}>
-        <div className="flex flex-col justify-center h-full px-1 pt-4 text-center sm:block sm:p-0">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <Dialog.Overlay className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" />
-          </Transition.Child>
+    <Dialog className="fixed inset-0 z-10" onClose={onClose} open={true}>
+      <div className="flex flex-col justify-center h-full px-1 pt-4 text-center sm:block sm:p-0">
+        <Dialog.Overlay
+          as={motion.div}
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+            transition: { duration: 0.4, ease: [0.36, 0.66, 0.04, 1] },
+          }}
+          exit={{
+            opacity: 0,
+            transition: { duration: 0.3, ease: [0.36, 0.66, 0.04, 1] },
+          }}
+          className="fixed inset-0 bg-black/40"
+        />
 
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            enterTo="opacity-100 translate-y-0 sm:scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          >
-            <div className="z-0 flex flex-col w-full h-full bg-white rounded-t-lg shadow-xl">
-              {children}
-            </div>
-          </Transition.Child>
-        </div>
-      </Dialog>
-    </Transition.Root>
+        <motion.div
+          initial={{ y: "100%" }}
+          animate={{
+            y: 0,
+            transition: { duration: 0.4, ease: [0.36, 0.66, 0.04, 1] },
+          }}
+          exit={{
+            y: "100%",
+            transition: { duration: 0.3, ease: [0.36, 0.66, 0.04, 1] },
+          }}
+          className="z-0 flex flex-col w-full h-full bg-white rounded-t-lg shadow-xl"
+        >
+          {children}
+        </motion.div>
+      </div>
+    </Dialog>
   );
 }
